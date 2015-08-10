@@ -37,9 +37,11 @@ val decompose : string -> letter list
 val print_letters : letter list -> unit
 type rotor_state = int
 module type PERMUT = sig val permut : letter -> letter end
+module Permut : functor (M : sig val desc : letter list end) -> PERMUT
 module type ROTOR =
   sig
     val turn : int
+    val permut : rotor_state -> letter -> letter
     val action : int -> rotor_state -> letter -> int * rotor_state * letter
   end
 module Rotor : functor (M : sig module P : PERMUT val i : int end) -> ROTOR
@@ -53,3 +55,4 @@ module type STATE =
   end
 module type MACHINE =
   sig val encrypt : int * int * int -> letter list -> letter list end
+module Make : functor (S : STATE) -> MACHINE

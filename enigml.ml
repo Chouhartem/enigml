@@ -1,4 +1,5 @@
 type letter = A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | Space
+
 let letters =
   [A ; B ; C ; D ; E ; F ; G ; H ; I ; J ; K ; L ; M ; N ; O ; P ; Q ; R ; S ; T
   ; U ; V ; W ; X ; Y ; Z ; Space]
@@ -40,7 +41,7 @@ let iter f =
 
 let inverse (permut:letter->letter) ltr =
   let image = List.map permut letters in
-  let assoc = List.combine letters image in
+  let assoc = List.combine image letters in
   List.assoc ltr assoc
 
 let decompose s =
@@ -61,13 +62,24 @@ module type PERMUT = sig
   val permut : letter -> letter
 end
 
+module Permut (M : sig val desc : letter list end) : PERMUT = struct
+  open M
+  let permut l = 
+    let assoc = List.combine letters desc in
+    List.assoc l assoc
+end
+
 module type ROTOR = sig
   val turn : int
+  val permut : rotor_state -> letter -> letter
   val action : int -> rotor_state -> letter -> int * rotor_state * letter
 end
 
 module Rotor (M : sig module P: PERMUT val i: int end ) : ROTOR = struct
-  let turn = M.i 
+  open M
+  let turn = i 
+  let permut s l =
+    iter prev (P.permut (iter next l s)) s
   let action b s l =
     let next_state = (b + s) mod 26 in
     let next_turn () = 
@@ -76,7 +88,7 @@ module Rotor (M : sig module P: PERMUT val i: int end ) : ROTOR = struct
       else
         0
     in
-    next_turn (), next_state, iter prev (M.P.permut (iter next l s)) s
+    next_turn (), next_state, permut s l
 end
 
 module type STATE = sig
@@ -91,3 +103,25 @@ module type MACHINE = sig
   val encrypt : (int * int * int) -> letter list -> letter list
 end
 
+module Make (S : STATE) : MACHINE = struct
+  open S
+  let encrypt =
+    let enc_letter (p1, p2, p3) l =
+      let l = Steckerbrett.permut l in
+      let b2, s1, l = Walze1.action 1 p1 l in
+      let b3, s2, l = Walze2.action b2 p2 l in
+      let _ , s3, l = Walze3.action b3 p3 l in
+      let l = Umkehrwalze.permut l in
+      let l = inverse (Walze3.permut p3) l in
+      let l = inverse (Walze2.permut p2) l in
+      let l = inverse (Walze1.permut p1) l in
+      let l = inverse Steckerbrett.permut l in
+      (s1, s2, s3, l)
+    in let rec loop res position = function
+      | [] -> List.rev res
+      | h::t -> begin
+        let p1, p2, p3, l = enc_letter position h in
+        loop (l::res) (p1, p2, p3) t
+      end
+    in loop []
+end

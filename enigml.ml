@@ -33,11 +33,13 @@ let prev = function
   | Q -> P | R -> Q | S -> R | T -> S | U -> T | V -> U | W -> V | X -> W
   | Y -> X | Z -> Y | Space -> Space
 
-let iter f =
-  let rec iter_aux res = function
-    | 0 -> res
-    | i -> iter_aux (f res) (pred i)
-  in iter_aux 
+let rec add a = function
+  | A -> a
+  | b -> add (next a) (prev b)
+
+let rec sub a = function
+  | A -> a
+  | b -> sub (prev a) (next b)
 
 let inverse (permut:letter->letter) ltr =
   let image = List.map permut letters in
@@ -56,7 +58,7 @@ let decompose s =
 
 let print_letters s = List.map of_letter s |> List.iter print_char
 
-type rotor_state = int
+type rotor_state = letter
 
 module type PERMUT = sig
   val permut : letter -> letter
@@ -70,25 +72,22 @@ module Permut (M : sig val desc : letter list end) : PERMUT = struct
 end
 
 module type ROTOR = sig
-  val turn : int
+  val turn : rotor_state
   val permut : rotor_state -> letter -> letter
-  val action : int -> rotor_state -> letter -> int * rotor_state * letter
+  val action : bool -> rotor_state -> letter -> bool * rotor_state * letter
 end
 
-module Rotor (M : sig module P: PERMUT val i: int end ) : ROTOR = struct
+module Rotor (M : sig module P: PERMUT val i: letter end ) : ROTOR = struct
   open M
   let turn = i 
   let permut s l =
-    iter prev (P.permut (iter next l s)) s
+    sub (P.permut (add l s)) s
   let action b s l =
-    let next_state = (b + s) mod 26 in
-    let next_turn () = 
-      if next_state == turn && b == 1 then
-        1
-      else
-        0
+    let next_state () = if b then next s else s in
+    let next_turn =
+      b && next_state () == turn 
     in
-    next_turn (), next_state, permut s l
+    next_turn, next_state (), permut s l
 end
 
 module type STATE = sig
@@ -100,7 +99,7 @@ module type STATE = sig
 end
 
 module type MACHINE = sig
-  val encrypt : (int * int * int) -> letter list -> letter list
+  val encrypt : rotor_state * rotor_state * rotor_state -> letter list -> letter list
 end
 
 module Make (S : STATE) : MACHINE = struct
@@ -108,7 +107,7 @@ module Make (S : STATE) : MACHINE = struct
   let encrypt =
     let enc_letter (p1, p2, p3) l =
       let l = Steckerbrett.permut l in
-      let b2, s1, l = Walze1.action 1 p1 l in
+      let b2, s1, l = Walze1.action true p1 l in
       let b3, s2, l = Walze2.action b2 p2 l in
       let _ , s3, l = Walze3.action b3 p3 l in
       let l = Umkehrwalze.permut l in

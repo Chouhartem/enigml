@@ -1,0 +1,53 @@
+open Enigml
+
+let initial_position = (I, V, M)
+
+module State : STATE = struct 
+  module Walze1 = Rotor (struct
+    module P = struct
+      let permut = function
+        | A -> O | B -> L | C -> F | D -> I | E -> D | F -> U | G -> H | H -> W
+        | I -> B | J -> C | K -> E | L -> T | M -> Y | N -> M | O -> K | P -> A
+        | Q -> J | R -> R | S -> V | T -> Z | U -> G | V -> X | W -> S | X -> P
+        | Y -> Q | Z -> N | Space -> Space
+    end
+      let i = K end)
+
+  module Walze2 = Rotor (struct
+    module P = struct
+      let permut = function
+        | A -> B | B -> T | C -> F | D -> G | E -> Q | F -> A | G -> J | H -> P
+        | I -> V | J -> S | K -> E | L -> M | M -> K | N -> I | O -> W | P -> U
+        | Q -> O | R -> D | S -> N | T -> Z | U -> Y | V -> L | W -> R | X -> X
+        | Y -> C | Z -> H | Space -> Space
+  end
+      let i = D end)
+
+  module Walze3 = Rotor (struct
+    module P = struct
+      let permut = function
+        | A -> P | B -> Z | C -> D | D -> A | E -> W | F -> B | G -> C | H -> N
+        | I -> K | J -> V | K -> X | L -> U | M -> M | N -> R | O -> L | P -> I
+        | Q -> Y | R -> S | S -> O | T -> T | U -> E | V -> J | W -> Q | X -> H
+        | Y -> F | Z -> G | Space -> Space
+  end
+      let i = Y end)
+
+  module Umkehrwalze = struct
+    let permut = function
+      | A -> N | B -> O | C -> P | D -> Q | E -> R | F -> S | G -> T | H -> U
+      | I -> V | J -> W | K -> X | L -> Y | M -> Z | N -> A | O -> B | P -> C
+      | Q -> D | R -> E | S -> F | T -> G | U -> H | V -> I | W -> J | X -> K
+      | Y -> L | Z -> M | Space -> Space
+  end
+
+  module Steckerbrett = struct
+    let permut = function
+      | A -> A | B -> J | C -> L | D -> D | E -> E | F -> F | G -> G | H -> H
+      | I -> I | J -> B | K -> K | L -> C | M -> U | N -> N | O -> O | P -> P
+      | Q -> Q | R -> R | S -> S | T -> T | U -> M | V -> V | W -> W | X -> X
+      | Y -> Y | Z -> Z | Space -> Space
+  end
+end
+
+module Machine : MACHINE = Make(State)

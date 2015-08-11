@@ -82,8 +82,6 @@ module type STATE =
 
 module type MACHINE =
   sig
-    val rotors : ((rotor_state -> letter -> letter) * (bool -> rotor_state ->
-      letter -> bool * rotor_state * letter)) array
     val encrypt : rotors_state -> letter list -> letter list
   end
 (** The signature of an enigml machine *)

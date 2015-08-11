@@ -109,8 +109,6 @@ module type STATE = sig
 end
 
 module type MACHINE = sig
-  val rotors : ((rotor_state -> letter -> letter) * (bool -> rotor_state ->
-    letter -> bool * rotor_state * letter)) array
   val encrypt : rotors_state -> letter list -> letter list
 end
 

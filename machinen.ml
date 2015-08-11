@@ -43,4 +43,4 @@ module Test_state : STATE = struct
 end
 
 module Test_Machine : MACHINE = Make(Test_state)
-
+(* The Test Machine *)

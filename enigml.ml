@@ -67,15 +67,17 @@ module type PERMUT = sig
   val permut : permutation
 end
 
-let permut_of_list desc l = 
+let permut_of_list desc l =
   let assoc = List.rev_append desc ( List.map (fun (x,y) -> (y,x)) desc) in
   try
     List.assoc l assoc
-  with _ -> l
+  with _ ->  l
 
 let permut_of_string desc l =
   let assoc = List.combine letters (decompose (desc ^ " ")) in
-  List.assoc l assoc
+  try
+    List.assoc l assoc
+  with _ -> Space
 
 module type ROTOR = sig
   val permut : rotor_state -> permutation
@@ -84,18 +86,34 @@ end
 
 module Rotor1 (M : sig
   module P: PERMUT
-  (** The permutation done by the Rotor when position is A *)
   val i: letter
-  (** The position where the rotor makes the next rotor move *)
 end ) : ROTOR = struct
   open M
-  let turn = i 
+  let notch = i
   let permut s l =
     sub (P.permut (add l s)) s
   let action b s l =
     let next_state () = if b then next s else s in
     let next_turn =
-      b && next_state () == turn 
+      b && next_state () == notch
+    in
+    next_turn, next_state (), permut s l
+end
+
+module Rotor2 (M : sig
+  module P : PERMUT
+  val n1: letter
+  val n2: letter
+end ) : ROTOR = struct
+  open M
+  let notch1 = n1
+  let notch2 = n2
+  let permut s l =
+    sub (P.permut (add l s)) s
+  let action b s l =
+    let next_state () = if b then next s else s in
+    let next_turn =
+      b && (next_state () == notch1 || next_state () == notch2)
     in
     next_turn, next_state (), permut s l
 end

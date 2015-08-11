@@ -70,6 +70,10 @@ module Rotor1 :
   functor (M : sig module P : PERMUT val i : letter end) -> ROTOR
 (** Construct a type I rotor that acts like an odometer *)
 
+module Rotor2 :
+  functor (M : sig module P : PERMUT val n1 : letter val n2 : letter end) -> ROTOR
+(** Construct a type II rotor *)
+
 module type STATE =
   sig
     module Walze1 : ROTOR

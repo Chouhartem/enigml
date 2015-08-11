@@ -45,35 +45,37 @@ module Test_Machine : MACHINE = Make(Test_state)
 module M3_state : STATE = struct
   module Walze1 = Rotor1 (struct
     module P = struct
-      let permut = permut_of_string "OLFIDUHWBCETYMKAJRVZGXSPQN"
+      let permut = permut_of_string "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
     end
-      let i = K end)
+      let i = R end)
 
   module Walze2 = Rotor1 (struct
     module P = struct
-      let permut = permut_of_string "BTFGQAJPVSEMKIWUODNZYLRXCH"
+      let permut = permut_of_string "AJDKSIRUXBLHWTMCQGZNPYFVOE"
   end
-      let i = D end)
+      let i = F end)
 
   module Walze3 = Rotor1 (struct
     module P = struct
-      let permut = permut_of_string "PZDAWBCNKVXUMRLIYSOTEJQHFG"
+      let permut = permut_of_string "BDFHJLCPRTXVZNYEIWGAKMUSQO"
   end
-      let i = Y end)
+      let i = W end)
 
   module Walze4 = Rotor1 (struct
     module P = struct
-      let permut = permut_of_string "YDASXOFUVGMCLJTWQZPNHEBIRK"
+      let permut = permut_of_string "ESOVPZJAYQUIRHXLNFTGKDCMWB"
     end
-      let i = E end)
+      let i = K end)
 
   module Walze5 = Rotor1 (struct
     module P = struct
-      let permut = permut_of_string "HQBMWVTUEZLKFGRAXINJPOCSYD"
+      let permut = permut_of_string "VZBRGITYUPSDNHLXAWMJQOFECK"
   end
-      let i = R end)
+      let i = A end)
 
   module Umkehrwalze = struct
-    let permut = permut_of_string "NOPQRSTUVWXYZABCDEFGHIJKLM"
+    let permut = permut_of_string "YRUHQSLDPXNGOKMIEBFZCWVJAT"
   end
 end
+
+module M3_Machine : MACHINE = Make(M3_state)

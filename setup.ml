@@ -1,9 +1,9 @@
 open Enigml
 
-let initial_position = (I, V, M)
+let initial_position = (0, I, 1 , V, 2, M)
 
 module State : STATE = struct 
-  module Walze1 = Rotor (struct
+  module Walze1 = Rotor1 (struct
     module P = struct
       let permut = function
         | A -> O | B -> L | C -> F | D -> I | E -> D | F -> U | G -> H | H -> W
@@ -13,7 +13,7 @@ module State : STATE = struct
     end
       let i = K end)
 
-  module Walze2 = Rotor (struct
+  module Walze2 = Rotor1 (struct
     module P = struct
       let permut = function
         | A -> B | B -> T | C -> F | D -> G | E -> Q | F -> A | G -> J | H -> P
@@ -23,7 +23,7 @@ module State : STATE = struct
   end
       let i = D end)
 
-  module Walze3 = Rotor (struct
+  module Walze3 = Rotor1 (struct
     module P = struct
       let permut = function
         | A -> P | B -> Z | C -> D | D -> A | E -> W | F -> B | G -> C | H -> N
@@ -32,6 +32,26 @@ module State : STATE = struct
         | Y -> F | Z -> G | Space -> Space
   end
       let i = Y end)
+
+  module Walze4 = Rotor1 (struct
+    module P = struct
+      let permut = function
+        | A -> Y | B -> D | C -> A | D -> S | E -> X | F -> O | G -> F | H -> U
+        | I -> V | J -> G | K -> M | L -> C | M -> L | N -> J | O -> T | P -> W
+        | Q -> Q | R -> Z | S -> P | T -> N | U -> H | V -> E | W -> B | X -> I
+        | Y -> R | Z -> K | Space -> Space
+  end
+      let i = E end)
+
+  module Walze5 = Rotor1 (struct
+    module P = struct
+      let permut = function
+        | A -> H | B -> Q | C -> B | D -> M | E -> W | F -> V | G -> T | H -> U
+        | I -> E | J -> Z | K -> L | L -> K | M -> F | N -> G | O -> R | P -> A
+        | Q -> X | R -> I | S -> N | T -> J | U -> P | V -> O | W -> C | X -> S
+        | Y -> Y | Z -> D | Space -> Space
+  end
+      let i = R end)
 
   module Umkehrwalze = struct
     let permut = function

@@ -39,7 +39,6 @@ module Permut : functor (M : sig val desc : letter list end) -> PERMUT
 
 module type ROTOR =
   sig
-    val turn : rotor_state
     val permut : rotor_state -> letter -> letter
     val action : bool -> rotor_state -> letter -> bool * rotor_state * letter
   end

@@ -86,10 +86,10 @@ end
 
 module Rotor1 (M : sig
   module P: PERMUT
-  val i: letter
+  val n: letter
 end ) : ROTOR = struct
   open M
-  let notch = i
+  let notch = n
   let permut s l =
     sub (P.permut (add l s)) s
   let action b s l =

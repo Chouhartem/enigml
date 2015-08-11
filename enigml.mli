@@ -67,7 +67,7 @@ module type ROTOR =
 (** The input signature of a Rotor *)
 
 module Rotor1 :
-  functor (M : sig module P : PERMUT val i : letter end) -> ROTOR
+  functor (M : sig module P : PERMUT val n : letter end) -> ROTOR
 (** Construct a type I rotor that acts like an odometer *)
 
 module Rotor2 :

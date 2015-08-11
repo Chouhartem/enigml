@@ -7,31 +7,31 @@ module Test_state : STATE = struct
     module P = struct
       let permut = permut_of_string "OLFIDUHWBCETYMKAJRVZGXSPQN"
     end
-      let i = K end)
+      let n = K end)
 
   module Walze2 = Rotor1 (struct
     module P = struct
       let permut = permut_of_string "BTFGQAJPVSEMKIWUODNZYLRXCH"
   end
-      let i = D end)
+      let n = D end)
 
   module Walze3 = Rotor1 (struct
     module P = struct
       let permut = permut_of_string "PZDAWBCNKVXUMRLIYSOTEJQHFG"
   end
-      let i = Y end)
+      let n = Y end)
 
   module Walze4 = Rotor1 (struct
     module P = struct
       let permut = permut_of_string "YDASXOFUVGMCLJTWQZPNHEBIRK"
     end
-      let i = E end)
+      let n = E end)
 
   module Walze5 = Rotor1 (struct
     module P = struct
       let permut = permut_of_string "HQBMWVTUEZLKFGRAXINJPOCSYD"
   end
-      let i = R end)
+      let n = R end)
 
   module Umkehrwalze = struct
     let permut = permut_of_string "NOPQRSTUVWXYZABCDEFGHIJKLM"
@@ -47,31 +47,31 @@ module M3_state : STATE = struct
     module P = struct
       let permut = permut_of_string "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
     end
-      let i = R end)
+      let n = R end)
 
   module Walze2 = Rotor1 (struct
     module P = struct
       let permut = permut_of_string "AJDKSIRUXBLHWTMCQGZNPYFVOE"
   end
-      let i = F end)
+      let n = F end)
 
   module Walze3 = Rotor1 (struct
     module P = struct
       let permut = permut_of_string "BDFHJLCPRTXVZNYEIWGAKMUSQO"
   end
-      let i = W end)
+      let n = W end)
 
   module Walze4 = Rotor1 (struct
     module P = struct
       let permut = permut_of_string "ESOVPZJAYQUIRHXLNFTGKDCMWB"
     end
-      let i = K end)
+      let n = K end)
 
   module Walze5 = Rotor1 (struct
     module P = struct
       let permut = permut_of_string "VZBRGITYUPSDNHLXAWMJQOFECK"
   end
-      let i = A end)
+      let n = A end)
 
   module Umkehrwalze = struct
     let permut = permut_of_string "YRUHQSLDPXNGOKMIEBFZCWVJAT"

@@ -43,21 +43,18 @@ type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state
   - Middle rotor index and its initial state
   - Rightmost rotor index and its initial state *)
 
+val permut_of_list : (letter * letter) list -> letter -> letter
+(** generate a permutation from a list *)
+
+val permut_of_string : string -> letter -> letter
+(** generate a permutation from a string *)
+
 module type PERMUT =
   sig
     val permut : letter -> letter
     (** The [permutation] *)
   end
 (** The input signature of a [permutation] *)
-
-module type PERMUT_LIST = sig
-  val desc : (letter * letter) list
-  (** The description of the permutation: [associative list] format *)
-end
-(** The permutation associative list format *)
-
-module Permut : functor (M : PERMUT_LIST) -> PERMUT
-(** Construct a permutation from a list of letters *)
 
 module type ROTOR =
   sig

@@ -65,17 +65,15 @@ module type PERMUT = sig
   val permut : letter -> letter
 end
 
-module type PERMUT_LIST = sig
-  val desc : (letter * letter) list
-end
+let permut_of_list desc l = 
+  let assoc = List.rev_append desc ( List.map (fun (x,y) -> (y,x)) desc) in
+  try
+    List.assoc l assoc
+  with _ -> l
 
-module Permut (M : PERMUT_LIST) : PERMUT = struct
-  let permut l = 
-    let assoc = List.rev_append M.desc ( List.map (fun (x,y) -> (y,x)) M.desc) in
-    try
-      List.assoc l assoc
-    with _ -> l
-end
+let permut_of_string desc l =
+  let assoc = List.combine letters (decompose (desc ^ " ")) in
+  List.assoc l assoc
 
 module type ROTOR = sig
   val permut : rotor_state -> letter -> letter

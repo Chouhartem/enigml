@@ -2,7 +2,7 @@ open Setup
 
 let _ =
   print_string
-  "This is enigml, an enigma simulator written in ocaml.\nType your plaintext (avoid spaces even if it is supported)\n> ";
+  "This is enigml, an enigma simulator written in ocaml.\nType your plaintext (avoid spaces even if they are supported)\n> ";
   let plaintext = read_line () in
   let cipher = Machine.encrypt initial_position (Enigml.decompose plaintext) in
   print_string "Ciphertext: ";

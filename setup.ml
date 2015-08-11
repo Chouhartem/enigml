@@ -61,13 +61,9 @@ module State : STATE = struct
       | Y -> L | Z -> M | Space -> Space
   end
 
-  module Steckerbrett = struct
-    let permut = function
-      | A -> A | B -> J | C -> L | D -> D | E -> E | F -> F | G -> G | H -> H
-      | I -> I | J -> B | K -> K | L -> C | M -> U | N -> N | O -> O | P -> P
-      | Q -> Q | R -> R | S -> S | T -> T | U -> M | V -> V | W -> W | X -> X
-      | Y -> Y | Z -> Z | Space -> Space
-  end
+  module Steckerbrett = Permut (struct
+    let desc = [ B, J; C, L; M, U ];
+  end)
 end
 
 module Machine : MACHINE = Make(State)

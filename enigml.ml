@@ -65,11 +65,16 @@ module type PERMUT = sig
   val permut : letter -> letter
 end
 
-module Permut (M : sig val desc : letter list end) : PERMUT = struct
-  open M
+module type PERMUT_LIST = sig
+  val desc : (letter * letter) list
+end
+
+module Permut (M : PERMUT_LIST) : PERMUT = struct
   let permut l = 
-    let assoc = List.combine letters desc in
-    List.assoc l assoc
+    let assoc = List.rev_append M.desc ( List.map (fun (x,y) -> (y,x)) M.desc) in
+    try
+      List.assoc l assoc
+    with _ -> l
 end
 
 module type ROTOR = sig
@@ -77,7 +82,12 @@ module type ROTOR = sig
   val action : bool -> rotor_state -> letter -> bool * rotor_state * letter
 end
 
-module Rotor1 (M : sig module P: PERMUT val i: letter end ) : ROTOR = struct
+module Rotor1 (M : sig
+  module P: PERMUT
+  (** The permutation done by the Rotor when position is A *)
+  val i: letter
+  (** The position where the rotor makes the next rotor move *)
+end ) : ROTOR = struct
   open M
   let turn = i 
   let permut s l =

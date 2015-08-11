@@ -127,6 +127,7 @@ module Make (S : STATE) : MACHINE = struct
       let l = Steckerbrett.permut l in
       let b2, s1, l = (snd rotors.(rotor1)) true p1 l in
       let b3, s2, l = (snd rotors.(rotor2)) b2 p2 l in
+      let _, s2, _ = (snd rotors.(rotor2)) b3 s2 l in (* double increment *)
       let _ , s3, l = (snd rotors.(rotor3)) b3 p3 l in
       let l = Umkehrwalze.permut l in
       let l = inverse (fst rotors.(rotor3) p3) l in

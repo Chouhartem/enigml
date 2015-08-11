@@ -43,7 +43,7 @@ let rec sub a = function
   | A -> a
   | b -> sub (prev a) (next b)
 
-let inverse (permut:letter->letter) ltr =
+let inverse (permut : permutation) ltr =
   let image = List.map permut letters in
   let assoc = List.combine image letters in
   List.assoc ltr assoc

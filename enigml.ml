@@ -1,5 +1,7 @@
 type letter = A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | Space
 
+type permutation = letter -> letter
+
 let letters =
   [A ; B ; C ; D ; E ; F ; G ; H ; I ; J ; K ; L ; M ; N ; O ; P ; Q ; R ; S ; T
   ; U ; V ; W ; X ; Y ; Z ; Space]
@@ -62,7 +64,7 @@ type rotor_state = letter
 type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state
 
 module type PERMUT = sig
-  val permut : letter -> letter
+  val permut : permutation
 end
 
 let permut_of_list desc l = 
@@ -76,7 +78,7 @@ let permut_of_string desc l =
   List.assoc l assoc
 
 module type ROTOR = sig
-  val permut : rotor_state -> letter -> letter
+  val permut : rotor_state -> permutation
   val action : bool -> rotor_state -> letter -> bool * rotor_state * letter
 end
 
@@ -105,11 +107,10 @@ module type STATE = sig
   module Walze4 : ROTOR
   module Walze5 : ROTOR
   module Umkehrwalze : PERMUT
-  module Steckerbrett : PERMUT
 end
 
 module type MACHINE = sig
-  val encrypt : rotors_state -> letter list -> letter list
+  val encrypt : permutation -> rotors_state -> letter list -> letter list
 end
 
 module Make (S : STATE) : MACHINE = struct
@@ -118,9 +119,9 @@ module Make (S : STATE) : MACHINE = struct
     [| (Walze1.permut, Walze1.action); (Walze2.permut,
     Walze2.action); (Walze3.permut, Walze3.action); (Walze4.permut,
     Walze4.action); (Walze5.permut, Walze5.action) |]
-  let encrypt (rotor1, position1, rotor2, position2, rotor3, position3) =
+  let encrypt steckerbrett (rotor1, position1, rotor2, position2, rotor3, position3) =
     let enc_letter (p1, p2, p3) l =
-      let l = Steckerbrett.permut l in
+      let l = steckerbrett l in
       let b2, s1, l = (snd rotors.(rotor1)) true p1 l in
       let b3, s2, l = (snd rotors.(rotor2)) b2 p2 l in
       let _, s2, _ = (snd rotors.(rotor2)) b3 s2 l in (* double increment *)
@@ -129,7 +130,7 @@ module Make (S : STATE) : MACHINE = struct
       let l = inverse (fst rotors.(rotor3) p3) l in
       let l = inverse (fst rotors.(rotor2) p2) l in
       let l = inverse (fst rotors.(rotor1) p1) l in
-      let l = inverse Steckerbrett.permut l in
+      let l = inverse steckerbrett l in
       (s1, s2, s3, l)
     in let rec loop res position = function
       | [] -> List.rev res

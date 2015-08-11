@@ -28,7 +28,10 @@ type letter =
   | Y
   | Z
   | Space
-(** The list of letters. *)
+(** The list of letters *)
+
+type permutation = letter -> letter
+(** The permutation type *)
 
 val decompose : string -> letter list
 (** Decompose a string into a list of [letter]s *)
@@ -43,22 +46,22 @@ type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state
   - Middle rotor index and its initial state
   - Rightmost rotor index and its initial state *)
 
-val permut_of_list : (letter * letter) list -> letter -> letter
+val permut_of_list : (letter * letter) list -> permutation
 (** generate a permutation from a list *)
 
-val permut_of_string : string -> letter -> letter
+val permut_of_string : string -> permutation
 (** generate a permutation from a string *)
 
 module type PERMUT =
   sig
-    val permut : letter -> letter
+    val permut : permutation
     (** The [permutation] *)
   end
 (** The input signature of a [permutation] *)
 
 module type ROTOR =
   sig
-    val permut : rotor_state -> letter -> letter
+    val permut : rotor_state -> permutation
     val action : bool -> rotor_state -> letter -> bool * rotor_state * letter
   end
 (** The input signature of a Rotor *)
@@ -75,16 +78,17 @@ module type STATE =
     module Walze4 : ROTOR
     module Walze5 : ROTOR
     module Umkehrwalze : PERMUT
-    module Steckerbrett : PERMUT
   end
 (** The input signature of an enigma machine construction:
   - TODO: sepate the and the permutation table (Steckerbrett) *)
 
 module type MACHINE =
   sig
-    val encrypt : rotors_state -> letter list -> letter list
+    val encrypt : permutation -> rotors_state -> letter list -> letter list
   end
-(** The signature of an enigml machine *)
+(** The signature of an enigml machine. To use encrypt, the arguments are : the
+     steckerbrett, the initial state of the rotors, that gives a function that
+     transforms a plaintext into its ciphertext *)
 
 module Make : functor (S : STATE) -> MACHINE
 (** The functor that create an enigma machine from a state *)

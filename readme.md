@@ -40,7 +40,7 @@ Exemple:
 $ ./main.native 
 This is enigml, an enigma simulator written in ocaml.
 Type your plaintext (avoid spaces even if they are supported)
-  > hallo 
-  Ciphertext: PBFXN
-  Decryption: HALLO
+> hallo 
+Ciphertext: PBFXN
+Decryption: HALLO
 ```

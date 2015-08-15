@@ -1,4 +1,8 @@
-(** Enigma machine simulator in OCaml *)
+(** Enigma machine simulator in OCaml
+ 
+    This module provides the tools to construct an enigma machine of type
+    {!MACHINE}
+ *)
 
 type letter =
     A
@@ -27,11 +31,11 @@ type letter =
   | X
   | Y
   | Z
-  | Space
+  | Space (** The space *)
 (** The list of letters *)
 
 type permutation = letter -> letter
-(** The permutation type *)
+(** The [permutation] type *)
 
 val decompose : string -> letter list
 (** Decompose a string into a list of [letter]s *)
@@ -42,15 +46,15 @@ val print_letters : letter list -> unit
 type rotor_state = letter
 type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state
 (** The rotors state in the following format:
-  - Leftmost rotor index and its initial state
-  - Middle rotor index and its initial state
-  - Rightmost rotor index and its initial state *)
+  - Leftmost {e rotor index} and its {e initial state}
+  - Middle {e rotor index} and its {e initial state}
+  - Rightmost {e rotor index} and its {e initial state} *)
 
 val permut_of_list : (letter * letter) list -> permutation
-(** generate a permutation from a list *)
+(** generate a [permutation] from a [list] *)
 
 val permut_of_string : string -> permutation
-(** generate a permutation from a string *)
+(** generate a [permutation] from a [string] *)
 
 module type PERMUT =
   sig
@@ -61,13 +65,16 @@ module type PERMUT =
 
 type rotor = {permut : rotor_state -> permutation;
   action : bool -> rotor_state -> letter -> bool * rotor_state * letter}
-(** The rotor type *)
+(** The [rotor] type. Provides 2 main functions:
+   - The permutation induced by the rotor
+   - The action of the rotor on its right neighbour (including the [permutation]
+   for compactness) *)
 
 val rotor1 : permutation -> letter -> rotor
-(** Construct a type I rotor that acts like an odometer *)
+(** Construct a {e type I} rotor that acts like an odometer *)
 
 val rotor2 : permutation -> letter -> letter -> rotor
-(** Construct a type II rotor *)
+(** Construct a {e type II} rotor *)
 
 module type STATE =
   sig
@@ -75,7 +82,7 @@ module type STATE =
     module Umkehrwalze : PERMUT
   end
 (** The input signature of an enigma machine construction:
-  - TODO: separate the state and the permutation table (Steckerbrett) *)
+  - {b TODO: separate the state and the permutation table (Steckerbrett)} *)
 
 module type MACHINE =
   sig

@@ -3,35 +3,12 @@ open Enigml
 (** Description of the different machines *)
 
 module Test_state : STATE = struct 
-  module Walze1 = Rotor1 (struct
-    module P = struct
-      let permut = permut_of_string "OLFIDUHWBCETYMKAJRVZGXSPQN"
-    end
-      let n = K end)
-
-  module Walze2 = Rotor1 (struct
-    module P = struct
-      let permut = permut_of_string "BTFGQAJPVSEMKIWUODNZYLRXCH"
-  end
-      let n = D end)
-
-  module Walze3 = Rotor1 (struct
-    module P = struct
-      let permut = permut_of_string "PZDAWBCNKVXUMRLIYSOTEJQHFG"
-  end
-      let n = Y end)
-
-  module Walze4 = Rotor1 (struct
-    module P = struct
-      let permut = permut_of_string "YDASXOFUVGMCLJTWQZPNHEBIRK"
-    end
-      let n = E end)
-
-  module Walze5 = Rotor1 (struct
-    module P = struct
-      let permut = permut_of_string "HQBMWVTUEZLKFGRAXINJPOCSYD"
-  end
-      let n = R end)
+  let walzen = [|
+    rotor1 (permut_of_string "OLFIDUHWBCETYMKAJRVZGXSPQN") K;
+    rotor1 (permut_of_string "BTFGQAJPVSEMKIWUODNZYLRXCH") D;
+    rotor1 (permut_of_string "PZDAWBCNKVXUMRLIYSOTEJQHFG") Y;
+    rotor1 (permut_of_string "YDASXOFUVGMCLJTWQZPNHEBIRK") E;
+    rotor1 (permut_of_string "HQBMWVTUEZLKFGRAXINJPOCSYD") R; |]
 
   module Umkehrwalze = struct
     let permut = permut_of_string "NOPQRSTUVWXYZABCDEFGHIJKLM"
@@ -43,36 +20,15 @@ module Test_Machine : MACHINE = Make(Test_state)
 
 (** M3 Army Enigma *)
 module M3_state : STATE = struct
-  module Walze1 = Rotor1 (struct
-    module P = struct
-      let permut = permut_of_string "EKMFLGDQVZNTOWYHXUSPAIBRCJ"
-    end
-      let n = R end)
-
-  module Walze2 = Rotor1 (struct
-    module P = struct
-      let permut = permut_of_string "AJDKSIRUXBLHWTMCQGZNPYFVOE"
-  end
-      let n = F end)
-
-  module Walze3 = Rotor1 (struct
-    module P = struct
-      let permut = permut_of_string "BDFHJLCPRTXVZNYEIWGAKMUSQO"
-  end
-      let n = W end)
-
-  module Walze4 = Rotor1 (struct
-    module P = struct
-      let permut = permut_of_string "ESOVPZJAYQUIRHXLNFTGKDCMWB"
-    end
-      let n = K end)
-
-  module Walze5 = Rotor1 (struct
-    module P = struct
-      let permut = permut_of_string "VZBRGITYUPSDNHLXAWMJQOFECK"
-  end
-      let n = A end)
-
+  let walzen = [|
+    rotor1 (permut_of_string "EKMFLGDQVZNTOWYHXUSPAIBRCJ") R;
+    rotor1 (permut_of_string "AJDKSIRUXBLHWTMCQGZNPYFVOE") F;
+    rotor1 (permut_of_string "BDFHJLCPRTXVZNYEIWGAKMUSQO") W;
+    rotor1 (permut_of_string "ESOVPZJAYQUIRHXLNFTGKDCMWB") K;
+    rotor1 (permut_of_string "VZBRGITYUPSDNHLXAWMJQOFECK") A;
+    rotor2 (permut_of_string "JPGVOUMFYQBENHZRDKASXLICTW") A N;
+    rotor2 (permut_of_string "NZJHGRCXMYSWBOUFAIVLPEKQDT") A N;
+    rotor2 (permut_of_string "FKQHTLXOCBJSPDZRAMEWNIUYGV") A N |]
   module Umkehrwalze = struct
     let permut = permut_of_string "YRUHQSLDPXNGOKMIEBFZCWVJAT"
   end

@@ -59,28 +59,19 @@ module type PERMUT =
   end
 (** The input signature of a [permutation] *)
 
-module type ROTOR =
-  sig
-    val permut : rotor_state -> permutation
-    val action : bool -> rotor_state -> letter -> bool * rotor_state * letter
-  end
-(** The input signature of a Rotor *)
+type rotor = {permut : rotor_state -> permutation;
+  action : bool -> rotor_state -> letter -> bool * rotor_state * letter}
+(** The rotor type *)
 
-module Rotor1 :
-  functor (M : sig module P : PERMUT val n : letter end) -> ROTOR
+val rotor1 : permutation -> letter -> rotor
 (** Construct a type I rotor that acts like an odometer *)
 
-module Rotor2 :
-  functor (M : sig module P : PERMUT val n1 : letter val n2 : letter end) -> ROTOR
+val rotor2 : permutation -> letter -> letter -> rotor
 (** Construct a type II rotor *)
 
 module type STATE =
   sig
-    module Walze1 : ROTOR
-    module Walze2 : ROTOR
-    module Walze3 : ROTOR
-    module Walze4 : ROTOR
-    module Walze5 : ROTOR
+    val walzen : rotor array
     module Umkehrwalze : PERMUT
   end
 (** The input signature of an enigma machine construction:

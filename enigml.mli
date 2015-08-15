@@ -75,7 +75,7 @@ module type STATE =
     module Umkehrwalze : PERMUT
   end
 (** The input signature of an enigma machine construction:
-  - TODO: sepate the and the permutation table (Steckerbrett) *)
+  - TODO: separate the state and the permutation table (Steckerbrett) *)
 
 module type MACHINE =
   sig

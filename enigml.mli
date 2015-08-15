@@ -81,7 +81,7 @@ module type STATE =
     val walzen : rotor array
     module Umkehrwalze : PERMUT
   end
-(** The input signature of an enigma machine construction:
+(** The input signature of an enigma machine construction.
   - {b TODO: separate the state and the permutation table (Steckerbrett)} *)
 
 module type MACHINE =

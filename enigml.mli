@@ -44,11 +44,12 @@ val print_letters : letter list -> unit
 (** Print a list of [letter]s *)
 
 type rotor_state = letter
-type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state
+type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state * int
 (** The rotors state in the following format:
   - Leftmost {e rotor index} and its {e initial state}
   - Middle {e rotor index} and its {e initial state}
-  - Rightmost {e rotor index} and its {e initial state} *)
+  - Rightmost {e rotor index} and its {e initial state}
+  - {e Reflector index}*)
 
 val permut_of_list : (letter * letter) list -> permutation
 (** generate a [permutation] from a [list] *)
@@ -70,7 +71,7 @@ val rotor2 : permutation -> letter -> letter -> rotor
 (** Construct a {e type II} rotor *)
 
 type state = { walzen : rotor array;
-umkehrwalze : permutation}
+umkehrwalze : permutation array}
 (** The input type of an enigma machine construction.
   - {b TODO: separate the state and the reflector (Umkehrwalze)} *)
 

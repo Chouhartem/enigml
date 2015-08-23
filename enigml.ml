@@ -61,7 +61,7 @@ let decompose s =
 let print_letters s = List.map of_letter s |> List.iter print_char
 
 type rotor_state = letter
-type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state
+type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state * int
 
 let permut_of_list desc l =
   let assoc = List.rev_append desc ( List.map (fun (x,y) -> (y,x)) desc) in
@@ -104,18 +104,18 @@ let rotor2 p n1 n2 =
   in {permut = permut; action = action}
 
 type state = { walzen : rotor array;
-umkehrwalze: permutation}
+umkehrwalze: permutation array}
 
 type machine = permutation -> rotors_state -> letter list -> letter list
 
-let make s steckerbrett (rotor1, position1, rotor2, position2, rotor3, position3) =
+let make s steckerbrett (rotor1, position1, rotor2, position2, rotor3, position3, reflector) =
   let enc_letter (p1, p2, p3) l =
     let l = steckerbrett l in
     let b2, s1, l = s.walzen.(rotor1).action true p1 l in
     let b3, s2, l = s.walzen.(rotor2).action b2 p2 l in
     let _, s2, _  = s.walzen.(rotor2).action b3 s2 l in (* double increment *)
     let _ , s3, l = s.walzen.(rotor3).action b3 p3 l in
-    let l = s.umkehrwalze l in
+    let l = s.umkehrwalze.(reflector) l in
     let l = inverse (s.walzen.(rotor3).permut p3) l in
     let l = inverse (s.walzen.(rotor2).permut p2) l in
     let l = inverse (s.walzen.(rotor1).permut p1) l in

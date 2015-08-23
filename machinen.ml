@@ -10,7 +10,8 @@ let test_state = {
     rotor1 (permut_of_string "YDASXOFUVGMCLJTWQZPNHEBIRK") E;
     rotor1 (permut_of_string "HQBMWVTUEZLKFGRAXINJPOCSYD") R; |];
 
-    umkehrwalze = permut_of_string "NOPQRSTUVWXYZABCDEFGHIJKLM"}
+    umkehrwalze = [| permut_of_string "NOPQRSTUVWXYZABCDEFGHIJKLM" |]
+}
 
 let test_machine = make test_state
 (* The Test Machine *)
@@ -26,7 +27,11 @@ let m3_state = {
     rotor2 (permut_of_string "JPGVOUMFYQBENHZRDKASXLICTW") A N;
     rotor2 (permut_of_string "NZJHGRCXMYSWBOUFAIVLPEKQDT") A N;
     rotor2 (permut_of_string "FKQHTLXOCBJSPDZRAMEWNIUYGV") A N |];
-    umkehrwalze = permut_of_string "YRUHQSLDPXNGOKMIEBFZCWVJAT"
+  umkehrwalze = [|
+    permut_of_string "EJMZALYXVBWFCRQUONTSPIKHGD";
+    permut_of_string "YRUHQSLDPXNGOKMIEBFZCWVJAT"; 
+    permut_of_string "FVPJIAOYEDRZXWGCTKUQSBNMHL"
+  |]
 }
 
 let m3_machine = make m3_state

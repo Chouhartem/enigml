@@ -1,8 +1,6 @@
 open Setup
 open Machinen
 
-exception Error
-
 let usage_msg : Arg.usage_msg =
 "Usage : ./main.native [options] configuration
 Where configuration is in the following format:
@@ -36,10 +34,26 @@ let select_machine s =
   | "test" | "Test" -> test_machine
   | "M3" | "m3" | _ -> m3_machine
 
+let session_pass s =
+  let open Enigml in
+  if String.length s != 3 then
+    failwith "Error: the session password must be 3 characters long"
+  else begin
+    let plaintext = s ^ s in
+    let cipher = !machine_choice (permut_of_list !steckerbrett)
+      position (decompose plaintext) in
+    print_letters cipher;
+    position.walze1_position <- to_letter s.[0];
+    position.walze2_position <- to_letter s.[1];
+    position.walze3_position <- to_letter s.[2]
+  end
+
 let speclist =
   [
   "--machine", Arg.String select_machine, "Select a machine. Available machines are: M3, test";
-  "-m", Arg.String select_machine, "Same as --machine"
+  "-m", Arg.String select_machine, "Same as --machine";
+  "--pass", Arg.String session_pass, "Set a session password for the file encrypt";
+  "-p", Arg.String session_pass, "Same as --pass"
   ]
 
 let rec main_loop () =
@@ -52,7 +66,7 @@ let rec main_loop () =
     main_loop ()
   with
   | End_of_file -> ()
-  | _ -> raise Error
+  | _ -> failwith "Unknown error"
 
 let _ =
   Arg.parse speclist anon_fun usage_msg;

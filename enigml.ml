@@ -61,7 +61,14 @@ let decompose s =
 let print_letters s = List.map of_letter s |> List.iter print_char
 
 type rotor_state = letter
-type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state * int
+type rotors_state = {
+  mutable walze1_index : int;
+  mutable walze1_position : rotor_state;
+  mutable walze2_index : int;
+  mutable walze2_position : rotor_state;
+  mutable walze3_index : int;
+  mutable walze3_position : rotor_state;
+  mutable ukw_index : int }
 
 let permut_of_list desc l =
   let assoc = List.rev_append desc ( List.map (fun (x,y) -> (y,x)) desc) in
@@ -108,17 +115,22 @@ umkehrwalze: permutation array}
 
 type machine = permutation -> rotors_state -> letter list -> letter list
 
-let make s steckerbrett (rotor1, position1, rotor2, position2, rotor3, position3, reflector) =
+let make s steckerbrett rotors_s =
+  let rotor1, position1, rotor2, position2, rotor3, position3, reflector =
+    s.walzen.(rotors_s.walze1_index), rotors_s.walze1_position,
+    s.walzen.(rotors_s.walze2_index), rotors_s.walze2_position,
+    s.walzen.(rotors_s.walze3_index), rotors_s.walze3_position,
+    s.umkehrwalze.(rotors_s.ukw_index) in
   let enc_letter (p1, p2, p3) l =
     let l = steckerbrett l in
-    let b2, s1, l = s.walzen.(rotor1).action true p1 l in
-    let b3, s2, l = s.walzen.(rotor2).action b2 p2 l in
-    let _, s2, _  = s.walzen.(rotor2).action b3 s2 l in (* double increment *)
-    let _ , s3, l = s.walzen.(rotor3).action b3 p3 l in
-    let l = s.umkehrwalze.(reflector) l in
-    let l = inverse (s.walzen.(rotor3).permut p3) l in
-    let l = inverse (s.walzen.(rotor2).permut p2) l in
-    let l = inverse (s.walzen.(rotor1).permut p1) l in
+    let b2, s1, l = rotor1.action true p1 l in
+    let b3, s2, l = rotor2.action b2 p2 l in
+    let _, s2, _  = rotor2.action b3 s2 l in (* double increment *)
+    let _ , s3, l = rotor3.action b3 p3 l in
+    let l = reflector l in
+    let l = inverse (rotor3.permut p3) l in
+    let l = inverse (rotor2.permut p2) l in
+    let l = inverse (rotor1.permut p1) l in
     let l = steckerbrett l in
     (s1, s2, s3, l)
   in let rec loop res position = function

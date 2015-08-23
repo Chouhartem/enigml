@@ -1,7 +1,7 @@
 (** Enigma machine simulator in OCaml
  
     This module provides the tools to construct an enigma machine of type
-    {!MACHINE}
+    {!machine}
  *)
 
 type letter =
@@ -44,12 +44,16 @@ val print_letters : letter list -> unit
 (** Print a list of [letter]s *)
 
 type rotor_state = letter
-type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state * int
-(** The rotors state in the following format:
-  - Leftmost {e rotor index} and its {e initial state}
-  - Middle {e rotor index} and its {e initial state}
-  - Rightmost {e rotor index} and its {e initial state}
-  - {e Reflector index}*)
+type rotors_state = {
+  mutable walze1_index : int; (** The leftmost rotor index *)
+  mutable walze1_position : rotor_state; (** The leftmost rotor position *)
+  mutable walze2_index : int; (** The middle rotor index *)
+  mutable walze2_position : rotor_state; (** The middle rotor position *)
+  mutable walze3_index : int; (** The rightmost rotor index *)
+  mutable walze3_position : rotor_state; (** The rightmost rotor position *)
+  mutable ukw_index : int (** The reflector index *) }
+(** The rotors' state. All is mutable uniquely for the interface, the structural
+    code is functionnal *)
 
 val permut_of_list : (letter * letter) list -> permutation
 (** generate a [permutation] from a [list] *)

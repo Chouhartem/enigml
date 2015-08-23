@@ -56,13 +56,6 @@ val permut_of_list : (letter * letter) list -> permutation
 val permut_of_string : string -> permutation
 (** generate a [permutation] from a [string] *)
 
-module type PERMUT =
-  sig
-    val permut : permutation
-    (** The [permutation] *)
-  end
-(** The input signature of a [permutation] *)
-
 type rotor = {permut : rotor_state -> permutation;
   action : bool -> rotor_state -> letter -> bool * rotor_state * letter}
 (** The [rotor] type. Provides 2 main functions:
@@ -76,21 +69,15 @@ val rotor1 : permutation -> letter -> rotor
 val rotor2 : permutation -> letter -> letter -> rotor
 (** Construct a {e type II} rotor *)
 
-module type STATE =
-  sig
-    val walzen : rotor array
-    module Umkehrwalze : PERMUT
-  end
-(** The input signature of an enigma machine construction.
-  - {b TODO: separate the state and the permutation table (Steckerbrett)} *)
+type state = { walzen : rotor array;
+umkehrwalze : permutation}
+(** The input type of an enigma machine construction.
+  - {b TODO: separate the state and the reflector (Umkehrwalze)} *)
 
-module type MACHINE =
-  sig
-    val encrypt : permutation -> rotors_state -> letter list -> letter list
-  end
-(** The signature of an enigml machine. To use encrypt, the arguments are : the
-     steckerbrett, the initial state of the rotors, that gives a function that
-     transforms a plaintext into its ciphertext *)
+type machine = permutation -> rotors_state -> letter list -> letter list
+(** The signature of an enigml machine. To use a machine, the arguments are :
+    the steckerbrett, the initial state of the rotors, that gives a function
+    that transforms a plaintext into its ciphertext *)
 
-module Make : functor (S : STATE) -> MACHINE
-(** The functor that create an enigma machine from a state *)
+val make : state -> machine
+(** The function that create an enigma machine from a state *)

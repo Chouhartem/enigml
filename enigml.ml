@@ -63,10 +63,6 @@ let print_letters s = List.map of_letter s |> List.iter print_char
 type rotor_state = letter
 type rotors_state = int * rotor_state * int * rotor_state * int * rotor_state
 
-module type PERMUT = sig
-  val permut : permutation
-end
-
 let permut_of_list desc l =
   let assoc = List.rev_append desc ( List.map (fun (x,y) -> (y,x)) desc) in
   try
@@ -107,35 +103,28 @@ let rotor2 p n1 n2 =
     next_turn, next_state (), permut s l
   in {permut = permut; action = action}
 
-module type STATE = sig
-  val walzen : rotor array
-  module Umkehrwalze : PERMUT
-end
+type state = { walzen : rotor array;
+umkehrwalze: permutation}
 
-module type MACHINE = sig
-  val encrypt : permutation -> rotors_state -> letter list -> letter list
-end
+type machine = permutation -> rotors_state -> letter list -> letter list
 
-module Make (S : STATE) : MACHINE = struct
-  open S
-  let encrypt steckerbrett (rotor1, position1, rotor2, position2, rotor3, position3) =
-    let enc_letter (p1, p2, p3) l =
-      let l = steckerbrett l in
-      let b2, s1, l = walzen.(rotor1).action true p1 l in
-      let b3, s2, l = walzen.(rotor2).action b2 p2 l in
-      let _, s2, _  = walzen.(rotor2).action b3 s2 l in (* double increment *)
-      let _ , s3, l = walzen.(rotor3).action b3 p3 l in
-      let l = Umkehrwalze.permut l in
-      let l = inverse (walzen.(rotor3).permut p3) l in
-      let l = inverse (walzen.(rotor2).permut p2) l in
-      let l = inverse (walzen.(rotor1).permut p1) l in
-      let l = steckerbrett l in
-      (s1, s2, s3, l)
-    in let rec loop res position = function
-      | [] -> List.rev res
-      | h::t -> begin
-        let p1, p2, p3, l = enc_letter position h in
-        loop (l::res) (p1, p2, p3) t
-      end
-    in loop [] (position1, position2, position3)
-end
+let make s steckerbrett (rotor1, position1, rotor2, position2, rotor3, position3) =
+  let enc_letter (p1, p2, p3) l =
+    let l = steckerbrett l in
+    let b2, s1, l = s.walzen.(rotor1).action true p1 l in
+    let b3, s2, l = s.walzen.(rotor2).action b2 p2 l in
+    let _, s2, _  = s.walzen.(rotor2).action b3 s2 l in (* double increment *)
+    let _ , s3, l = s.walzen.(rotor3).action b3 p3 l in
+    let l = s.umkehrwalze l in
+    let l = inverse (s.walzen.(rotor3).permut p3) l in
+    let l = inverse (s.walzen.(rotor2).permut p2) l in
+    let l = inverse (s.walzen.(rotor1).permut p1) l in
+    let l = steckerbrett l in
+    (s1, s2, s3, l)
+  in let rec loop res position = function
+    | [] -> List.rev res
+    | h::t -> begin
+      let p1, p2, p3, l = enc_letter position h in
+      loop (l::res) (p1, p2, p3) t
+    end
+  in loop [] (position1, position2, position3)

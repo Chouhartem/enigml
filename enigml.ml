@@ -134,7 +134,13 @@ let make s steckerbrett rotors_s =
     let l = steckerbrett l in
     (s1, s2, s3, l)
   in let rec loop res position = function
-    | [] -> List.rev res
+    | [] -> begin
+              let p1, p2, p3 = position in
+              rotors_s.walze1_position <- p1;
+              rotors_s.walze2_position <- p2;
+              rotors_s.walze3_position <- p3;
+              List.rev res
+            end
     | h::t -> begin
       let p1, p2, p3, l = enc_letter position h in
       loop (l::res) (p1, p2, p3) t

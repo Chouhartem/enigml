@@ -40,6 +40,9 @@ type permutation = letter -> letter
 val decompose : string -> letter list
 (** Decompose a string into a list of [letter]s *)
 
+val to_letter : char -> letter
+(** Convert a [char] to its [letter] equivalent *)
+
 val print_letters : letter list -> unit
 (** Print a list of [letter]s *)
 
@@ -52,8 +55,7 @@ type rotors_state = {
   mutable walze3_index : int; (** The rightmost rotor index *)
   mutable walze3_position : rotor_state; (** The rightmost rotor position *)
   mutable ukw_index : int (** The reflector index *) }
-(** The rotors' state. All is mutable uniquely for the interface, the structural
-    code is functionnal *)
+(** The rotors' state. *)
 
 val permut_of_list : (letter * letter) list -> permutation
 (** generate a [permutation] from a [list] *)
@@ -76,13 +78,15 @@ val rotor2 : permutation -> letter -> letter -> rotor
 
 type state = { walzen : rotor array;
 umkehrwalze : permutation array}
-(** The input type of an enigma machine construction.
-  - {b TODO: separate the state and the reflector (Umkehrwalze)} *)
+(** The input type of an enigma machine construction. *)
 
 type machine = permutation -> rotors_state -> letter list -> letter list
 (** The signature of an enigml machine. To use a machine, the arguments are :
     the steckerbrett, the initial state of the rotors, that gives a function
-    that transforms a plaintext into its ciphertext *)
+    that transforms a plaintext into its ciphertext.
+    
+    {b Warning:} This has the side-effect to change the rotors_state to set the
+    rotors position at their stop position *)
 
 val make : state -> machine
 (** The function that create an enigma machine from a state *)

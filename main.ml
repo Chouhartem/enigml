@@ -68,6 +68,18 @@ let rec main_loop () =
   | End_of_file -> ()
   | _ -> failwith "Unknown error"
 
+let rec test_uniq = function
+  | [] -> true
+  | (k,_)::t -> begin
+      if List.mem_assoc k t then
+        false
+      else
+        test_uniq t
+    end
+
 let _ =
   Arg.parse speclist anon_fun usage_msg;
-  main_loop ()
+  if test_uniq (List.rev_append !steckerbrett (List.rev_map (fun (x,y) -> (y,x)) !steckerbrett)) then 
+    main_loop ()
+  else
+    failwith "Duplicate in Steckerbrett"

@@ -44,7 +44,7 @@ let rec sub a = function
   | b -> sub (prev a) (next b)
 
 let inverse (permut : permutation) ltr =
-  let image = List.map permut letters in
+  let image = List.rev_map permut letters |> List.rev in
   let assoc = List.combine image letters in
   List.assoc ltr assoc
 
@@ -56,9 +56,9 @@ let decompose s =
     let rec decompose_aux acc = function
       | 0 -> List.rev acc
       | i -> decompose_aux (s.[size-i]::acc) (pred i)
-    in decompose_aux [] size |> List.map to_letter
+    in decompose_aux [] size |> List.rev_map to_letter |> List.rev
 
-let print_letters s = List.map of_letter s |> List.iter print_char
+let print_letters s = List.rev_map of_letter s |> List.rev |> List.iter print_char
 
 type rotor_state = letter
 type rotors_state = {
@@ -71,7 +71,7 @@ type rotors_state = {
   mutable ukw_index : int }
 
 let permut_of_list desc l =
-  let assoc = List.rev_append desc ( List.map (fun (x,y) -> (y,x)) desc) in
+  let assoc = List.rev_append desc ( List.rev_map (fun (x,y) -> (y,x)) desc) in
   try
     List.assoc l assoc
   with _ ->  l

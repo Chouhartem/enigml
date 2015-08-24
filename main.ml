@@ -2,7 +2,7 @@ open Setup
 open Machinen
 
 let usage_msg : Arg.usage_msg =
-"Usage : ./main.native [options] configuration
+"Usage : " ^ Sys.argv.(0) ^ " [-m machine] configuration [-p passphrase]
 Where configuration is in the following format:
   012 ABC 0 AB CD
 Where:
@@ -11,7 +11,7 @@ Where:
   - the third argument represents the reflector choice
   - the remaining arguments represent the permutation table, here \"AB CD\" means
     that A <-> B and C <-> D
-The options are:"
+The possible options are:"
 
 let argument_position = ref 0
 

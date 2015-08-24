@@ -52,7 +52,7 @@ let speclist =
   [
   "--machine", Arg.String select_machine, "Select a machine. Available machines are: M3, test";
   "-m", Arg.String select_machine, "Same as --machine";
-  "--pass", Arg.String session_pass, "Set a session password for the file encrypt";
+  "--pass", Arg.String session_pass, "Set a session password for the file encrypt. Use it as last argument";
   "-p", Arg.String session_pass, "Same as --pass"
   ]
 

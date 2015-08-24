@@ -39,11 +39,17 @@ Usage
 
 On appelle le simulateur à l’aide de:
 ```bash
-./main.native [-m machine] 012 ABC 3 ZY XV
+./main.native [-m machine] 012 ABC 3 ZY XV [-p DEF]
 ```
-Où 012 représente l’ordre des rotors (les indices débutent à 0)
+Où 012 représente l’ordre des rotors (les indices débutent à 0).  
+ABC représente l’état initial des rotors.  
+3 représente l’indice du réflecteur.  
+ZY, XV représentent la table de permutation.
 
-Et il ne vous reste plus qu’à taper votre texte (possiblement multiligne).
+Pour les options, vous pouvez spécifier une machine (`-m`) et un mot de passe de
+session (`-p`).
+
+L’entrée (possiblement multiligne) est lue à partire de `stdin`.
 
 Exemple:
 ```

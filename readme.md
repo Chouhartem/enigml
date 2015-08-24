@@ -10,6 +10,9 @@ fonctionnel possible.
 L’utilisation du module `Arg` rend cependant certaines partie du code
 impératives (en dehors de l’interface dans `main.ml`)
 
+**Mise en garde :** N’utilisez jamais ce logiciel ou une variante d’enigma pour
+protéger des données sensibles.
+
 Build
 -----
 

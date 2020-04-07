@@ -1,0 +1,3 @@
+(executable
+ (name main)
+ (modules enigml machinen main setup))
